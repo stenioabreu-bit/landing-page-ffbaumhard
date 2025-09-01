@@ -78,7 +78,7 @@
 
     .logo {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 5rem;
+      font-size: 10rem;
       font-weight: 800;
       background: linear-gradient(45deg, #7e6a27, #ffffff);
       -webkit-background-clip: text;
@@ -202,8 +202,9 @@
     }
 
     .about-text {
+      text-align: left;
       flex: 1;
-      max-width: 400px; /* Limita o tamanho do texto */
+      max-width: 400px;
     }
 
     .about-text h3 {
@@ -248,10 +249,10 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(0,0,0,0.7);
-      color: white;
+      background: rgba(0, 0, 0, 0);
+      color: rgb(255, 255, 255);
       border: none;
-      font-size: 2rem;
+      font-size: 4rem;
       padding: 10px;
       cursor: pointer;
       border-radius: 50%;
@@ -263,11 +264,6 @@
       justify-content: center;
       transition: background 0.3s;
       opacity: 0.8;
-    }
-
-    .arrow:hover {
-      background: rgba(0,0,0,0.9);
-      opacity: 1;
     }
 
     .arrow.left {
@@ -283,7 +279,7 @@
       text-align: center;
       background: rgba(0,0,0,0.3);
       border-radius: 20px;
-      margin: 50px 20px;
+      margin: 50px 10px;
     }
 
     .cta h2 {
@@ -292,9 +288,9 @@
     }
 
     .cta p {
-      font-size: 1.2rem;
+      font-size: 1rem;
       margin-bottom: 30px;
-      max-width: 600px;
+      max-width: 300px;
       margin-left: auto;
       margin-right: auto;
       color: #e0e0e0;
@@ -362,7 +358,6 @@
       }
     }
 
-    /* Animation for background transition */
     @keyframes fadeBackground {
       0% {
         opacity: 1;
@@ -450,7 +445,7 @@
 
     <section class="cta">
       <h2>Pronto para transformar seu veículo?</h2>
-      <p>Entre em contato agora mesmo e agende seu serviço. Oferecemos atendimento personalizado, preços justos e o melhor cuidado para o seu veículo.</p>
+      <p>Entre em contato agora mesmo e agende seu serviço. Oferecemos atendimento personalizado preços justos e o melhor cuidado para o seu veículo.</p>
       <a href="https://api.whatsapp.com/message/34G3FMABYWJUH1?autoload=1&app_absent=0" class="btn" style="background: linear-gradient(25deg, #7e6a27, #ddd6a4);"target="_blank">Agendar agora</a>
     </section>
 
@@ -474,30 +469,65 @@
       <p>Página web feita por OWLIN - Todos os direitos reservados<p>
     </footer>
   </div>
-  <script>
-  // Carrossel - Início
-const imagesWrapper = document.querySelector('.about-images');
-const images = document.querySelectorAll('.about-image');
-const left = document.querySelector('.arrow.left');
-const right = document.querySelector('.arrow.right');
-let current = 0;
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const imagesWrapper = document.querySelector('.about-images');
+    const images = document.querySelectorAll('.about-image');
+    const left = document.querySelector('.arrow.left');
+    const right = document.querySelector('.arrow.right');
 
-function updateCarousel() {
-  imagesWrapper.style.transform = `translateX(-${current * 100}%)`;
-}
+    if (!imagesWrapper || !images.length) return;
 
-left.addEventListener('click', () => {
-  current = (current === 0) ? images.length - 1 : current - 1;
-  updateCarousel();
-});
+    let current = 0;
+    let startX = 0;
+    let endX = 0;
 
-right.addEventListener('click', () => {
-  current = (current === images.length - 1) ? 0 : current + 1;
-  updateCarousel();
-});
+    function updateCarousel() {
+      const offset = -current * 100;
+      imagesWrapper.style.transform = `translateX(${offset}%)`;
+    }
 
-updateCarousel();
+    // Navegação pelas setas
+    if (left && right) {
+      left.addEventListener('click', () => {
+        current = (current === 0) ? images.length - 1 : current - 1;
+        updateCarousel();
+      });
 
+      right.addEventListener('click', () => {
+        current = (current === images.length - 1) ? 0 : current + 1;
+        updateCarousel();
+      });
+    }
+
+    // Swipe para mobile
+    imagesWrapper.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+    });
+
+    imagesWrapper.addEventListener('touchmove', (e) => {
+      endX = e.touches[0].clientX;
+    });
+
+    imagesWrapper.addEventListener('touchend', () => {
+      const diff = startX - endX;
+      
+      // Só muda se o swipe for significativo (> 50px)
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          // Swipe para esquerda → próxima imagem
+          current = (current === images.length - 1) ? 0 : current + 1;
+        } else {
+          // Swipe para direita → imagem anterior
+          current = (current === 0) ? images.length - 1 : current - 1;
+        }
+        updateCarousel();
+      }
+    });
+
+    // Inicializa
+    updateCarousel();
+  });
 </script>
 </body>
 </html>
